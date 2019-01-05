@@ -1,0 +1,27 @@
+{
+  "name": "steam-queue-clicker",
+  "version": "1.0.0",
+  "description": "A Steam queue clicker for special sale events",
+  "main": "start.js",
+  "scripts": {
+    "start": "node start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ajmeese7/steam-queue-clicker"
+  },
+  "dependencies": {
+    "nightmare": "3.0.1",
+    "vo": "4.0.2"
+  },
+  "engines": {
+    "node": ">=4.0"
+  },
+  "keywords": [
+    "nightmare",
+    "steam",
+    "cards"
+  ],
+  "author": "Aaron Meese",
+  "license": "MIT"
+}
