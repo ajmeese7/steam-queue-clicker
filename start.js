@@ -3,6 +3,7 @@ var browser = new Nightmare({show: true, typeInterval: 50, pollInterval: 50});
 // NOTE: How to make it use the installed Electron instead of re-downloading?
 
 // IDEA: Add a way to cycle through multiple accounts for users with `botnets`
+var username = "YOUR_username_HERE";
 var password = "YOUR_password_HERE";
 login(username, password);
 
@@ -21,12 +22,11 @@ function login(username, password) {
 
 var queuesClickedThrough = 0;
 function clickThroughQueue() {
-  // NOTE: For some reason there is ~10 second delay between clicking queues
   queuesClickedThrough++;
 
-  // NOTE: Change the 3 to however many queues you want to click through.
+  // NOTE: Change the `3` to however many queues you want to click through.
   if (queuesClickedThrough <= 3) {
-    console.log("clickThroughQueue() time #: " + queuesClickedThrough);
+    console.log("queue #" + queuesClickedThrough);
     if (queuesClickedThrough < 2) {
       browser
         .wait('[class="begin_exploring"]')
@@ -38,16 +38,19 @@ function clickThroughQueue() {
       continueQueue();
     }
   } else {
-    // NOTE: Now this case isn't running, so Electron isn't closing. Test again w/ <3?
-    console.log("clickThroughQueue() is done!");
-    browser.wait(5000).end();
+    browser
+      .end()
+      .then(() => {
+        console.log("Program is done!");
+      });
   }
 }
 
 function continueQueue() {
-  // TODO: Optimize timings!!
   browser
-    .wait(2000)
+    // NOTE: If you see an error like `An ERROR occured in continueQueue() IF STATEMENT: Error: Cannot read property 'blur' of null`
+    // you need to increase this time here because your internet needs more time to load the pages.
+    .wait(2000) // IDEA: Is there a better way to do this? The elements had a problem last time
     .evaluate(function () {
       var queueOver = document.getElementById('refresh_queue_btn');
       if (!queueOver) {
@@ -59,6 +62,7 @@ function continueQueue() {
     .then(queueNotOver => {
       if (queueNotOver) {
         return browser
+          .wait('[class="btn_next_in_queue btn_next_in_queue_trigger"]')
           .click('[class="btn_next_in_queue btn_next_in_queue_trigger"]') // In case there is an age limiter
           .click('[class="next_in_queue_content"]') // Regular game page (without age verification)
           .then(function() {
